@@ -22,6 +22,9 @@ const spellbound = new Map([
   ['atomatom', 'Automaton'],
   ['atomit', 'Automatons'],
   ['butt', 'BOTS'],
+  ['pots', 'Bots'],
+  ['red ex', 'Red Eyes'],
+  ['red eyes', 'Red Eyes'],
   ['pubg', 'bot freak'],
   ['but frik', 'bot freak'],
   ['bot frik', 'bot freak'],
@@ -37,13 +40,20 @@ const spellbound = new Map([
   ['turminats', 'Terminids'],
   ['terminit', 'Terminids'],
   ['terminates', 'Terminids'],
+  ['bugfrik', 'bug freak'],
 
   ['sqts', 'squids'],
-  
+
   ['awy', 'away'],
   ['friks', 'freaks'],
   ['fume', 'from me'],
   ['furmy', 'from me'],
+  ['furme', 'from me'],
+
+  ['furti tud', 'FORTITUDE'],
+  ['fur', 'FOR'],
+  ['swat', 'SWEET'],
+  ['ford', 'FORWARD'],
 
   ['morn', 'mourn'],
   ['mame', 'maim'],
@@ -54,6 +64,9 @@ const spellbound = new Map([
   ['movet', 'MOVE IT'],
   ['movint', 'MOVE IT'],
   ['movin', 'MOVING'],
+  ['mov', 'move'],
+  ['cover my', 'cover my'],
+  ['ar riring', 'are ringing'],
 
   ['super earth', 'Super Earth'],
 
@@ -109,6 +122,11 @@ const spellbound = new Map([
   ['heldover', 'Helldiver'],
   ['heldive', 'Helldiver'],
 
+  ['hell pots', 'Hellpods'],
+  ['hell pods', 'Hellpods'],
+  ['hell pod', 'Hellpod'],
+  ['hellpod', 'Hellpod'],
+  ['hellpods', 'Hellpods'],
   ['tum', 'THEM'],
   ['peces', 'PIECES'],
   ['jum pac', 'jump pack'],
@@ -126,6 +144,7 @@ const spellbound = new Map([
   ['swet', 'SWEET'],
   ['freadom', 'FREEDOM'],
   ['fredom', 'FREEDOM'],
+  ['fredoms', 'FREEDOMS'],
   ['fredem', 'FREEDOM'],
   ['fredoom', 'FREEDOM'],
   ['freatom', 'FREEDOM'],
@@ -173,7 +192,25 @@ const spellbound = new Map([
   ['hir sring', 'EARS RINGING'],
   ['destry', 'destroy'],
   ['arwe', 'ROE'],
-  ['arwe', 'ROE'],
+  ['democric', 'DEMOCRACY'],
+  ['democ', 'Democracy'],
+  ['democri', 'Democracy'],
+  ['preper', 'Prepare'],
+  ['wicalive', 'Look Alive'],
+  ['prepre', 'Prepare'],
+  ['demolicen', 'Demolition'],
+  ['pol', 'Power of '],
+  ['polig', 'calling in extraction'],
+  ['a stins', 'out of stims'],
+  ['n vmo', 'out of ammo'],
+
+  ['trelod', 'to reload'],
+  ['neet', 'need to'],
+  ['relod', 'reload'],
+  ['assissistans', 'assistance'],
+  ['gor', 'go for'],
+  ['a comik', 'incoming'],
+  ['gory', 'go already'],
 
 ]);
 
