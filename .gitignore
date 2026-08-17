@@ -362,16 +362,19 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-
+# it's him again.
+desktop.ini
 dist/***
+
+# the DLC that you gotta grab
 /dongles/***
 !/dongles/.keep
-/extracted*
-desktop.ini
-
-/parakeet_model
+/parakeet_model/***
 !/parakeet_model/.keep
+
+# the actual outputs
+/extracted*
 /*.txt
-/transcripts/***
-/final_final/***
+/transcripts*
+/final_final*
 
