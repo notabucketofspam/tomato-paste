@@ -2,17 +2,16 @@
   "name": "tomato-paste",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "dist/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build",
     "clean": "tsc --build --clean"
   },
   "keywords": [],
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/node": "^26.2.0",
-    "eslint": "^10.8.1",
     "typescript": "^7.0.2"
   }
 }
