@@ -208,7 +208,7 @@ const spellbound = new Map([
   ['neet', 'need to'],
   ['relod', 'reload'],
   ['assissistans', 'assistance'],
-  ['gor', 'go for'],
+  ['gor', 'GO FOR'],
   ['a comik', 'incoming'],
   ['gory', 'go already'],
 
