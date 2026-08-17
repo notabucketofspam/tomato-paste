@@ -43,6 +43,8 @@ function runPipeline() {
   // copy it into the final_final folder, and ...
   // rename it to be whatever is in the transcript
 
+  console.log(`renaming/copying files to the final_final folder...`);
+
   const final_final = './final_final';
   fs.mkdirSync(final_final, { recursive: true });
 
