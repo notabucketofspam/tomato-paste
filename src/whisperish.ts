@@ -1,67 +1,66 @@
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
 import path from 'node:path';
 import fs from 'node:fs';
+import sherpa from 'sherpa-onnx-node';
 
-const execFileAsync = promisify(execFile);
+const { OfflineRecognizer, readWave } = sherpa;
 
-export async function transcribeWithExe(filePath: string) {
-    const toolPath = './dongles/faster-whisper-xxl.exe';
-    
-    // Flags tell it to use the base model, English, enable VAD, and output a standard text file
-    const args = [
-        filePath,
-        '--language', 'en',
-        '--model', 'base',
-        '--vad_filter', 'True',
-        '--output_format', 'txt',
-        '--beep_off',
-    ];
+function initRecognizer() {
+    const modelDir = path.join(import.meta.dirname,'..', 'parakeet_model');
 
-    console.log(`Sending ${filePath} to Faster-Whisper...`);
-
-    try {
-        await execFileAsync(toolPath, args);
-        
-        const actualFilename = path.parse(filePath).name;
-
-        const textFilePath = `dongles/${actualFilename}.txt`;
-        
-        // Read the result back into Node.js
-        let transcript = await fs.promises.readFile(textFilePath, 'utf-8');
-        transcript = transcript.replace(/^\[.*?\]/g, ''); // Remove timestamp
-        transcript = transcript.replace(/[^\w\s]/g, ''); // Remove any punctuation
-        console.log("Result:", transcript.trim());
-
-
-      const parsedPath = path.parse(filePath);
-      const truncatedName = transcript.substring(0, 60).trim(); 
-
-      let newFileName = `${truncatedName}${parsedPath.ext}`;
-      let newFilePath = path.join(parsedPath.dir, newFileName);
-      let counter = 1;
-
-      // Loop to check if the file already exists
-      while (true) {
-          try {
-              // access() throws an error if the file DOES NOT exist
-              await fs.promises.access(newFilePath);
-        
-              // If we get here, the file DOES exist. Append a number and try again.
-              newFileName = `${truncatedName} (${counter})${parsedPath.ext}`;
-              newFilePath = path.join(parsedPath.dir, newFileName);
-              counter++;
-          } catch {
-              // The file doesn't exist yet! It is safe to break the loop and use this name.
-              break;
-          }
-      }
-
-      await fs.promises.rename(filePath, newFilePath);
-        
-    } catch (error) {
-        //console.error("Transcription failed:", error);
-        throw error;
-    }
+    const config = {
+        featConfig: {
+            sampleRate: 16000,
+            featureDim: 80, 
+        },
+        modelConfig: {
+            // Replaced nemoCtc with the transducer configuration
+            transducer: {
+                encoder: path.join(modelDir, 'encoder.int8.onnx'),
+                decoder: path.join(modelDir, 'decoder.int8.onnx'),
+                joiner: path.join(modelDir, 'joiner.int8.onnx'),
+            },
+            tokens: path.join(modelDir, 'tokens.txt'),
+            numThreads: 4, 
+            debug: 1
+        }
+    };
+    return new OfflineRecognizer(config);
 }
+
+// Keep the recognizer loaded in memory so we don't reload it for every file
+const recognizer = initRecognizer();
+
+export async function processAudio(filePath: string) {
+  console.log(`Analyzing: ${filePath}`);
+
+  let parsedPath = path.parse(filePath);
+  const txtpath = path.join(parsedPath.dir, `${parsedPath.name}.txt`);
+    
+  try {
+    const waveData = readWave(filePath);        
+    const stream = recognizer.createStream();
+
+    stream.acceptWaveform({
+      sampleRate: waveData.sampleRate,
+      samples: waveData.samples
+    });
+        
+    recognizer.decode(stream);
+    const transcript = recognizer.getResult(stream).text;
+    
+    if (!transcript) {
+      // console.log(`  -> No speech detected.`);
+      return;
+    }
+    
+    // console.log(`  -> Result: ${transcript}`);
+    fs.writeFileSync(txtpath, transcript, 'utf8');
+            
+  } catch (error) {
+      console.error(`  -> Failed to process ${filePath}:`, error);
+      //process.abort();
+      fs.writeFileSync(txtpath, `Error processing file: ${error instanceof Error ? error.message : String(error)}`, 'utf8');
+  }
+}
+
 

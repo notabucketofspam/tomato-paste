@@ -24,32 +24,22 @@ async function findAudioFiles(dir: string): Promise<string[]> {
 }
 
 import {runFilediver} from './audio_extract.js';
-import {transcribeWithExe} from './whisperish.js';
+import {processAudio} from './whisperish.js';
 
 // 4. The main pipeline runner
 async function runPipeline() {
     const extractedFolder = './extracted_audio'; // Change this to your filediver output path
 
     console.log(`Running filediver to extract audio to ${extractedFolder}...`);
-    await runFilediver(extractedFolder);
-
-    console.log(`Scanning ${extractedFolder} for audio files...`);
+    // await runFilediver(extractedFolder);
     
-    try {
-        // Get an array of every .wav and .ogg file in the directory
         const allAudioFiles = await findAudioFiles(extractedFolder);
         console.log(`Found ${allAudioFiles.length} audio files. Starting AI transcription... \n`);
 
         // Loop through each file one by one
         for (const file of allAudioFiles) {
-            await transcribeWithExe(file);
+            await processAudio(file);
         }
-
-        console.log("\nPipeline finished successfully!");
-
-    } catch (error) {
-        console.error("Pipeline failed:", error);
-    }
 }
 
 // Execute the script

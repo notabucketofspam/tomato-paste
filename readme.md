@@ -1,8 +1,8 @@
 
-here's a list of some of the random stuff that you'll need to put into the `dongles` folder:
+some stuff that you'll need to put into the `dongles` folder:
 - [filediver.exe](https://github.com/xypwn/filediver)
-- [faster-whisper-xxl.exe](https://github.com/Purfview/whisper-standalone-win)
-- `_xxl_data`
-- `ffmpeg.exe`, which is included when you download one of the above
+- `ffmpeg.exe` (included with the above)
 
-^^^ all of these go in the `dongles` folder
+and some stuff to put in the `parakeet_model` folder:
+- [the parakeet model](https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2)
+	- extract all of that, and then dump the contents into the `parakeet_model` folder

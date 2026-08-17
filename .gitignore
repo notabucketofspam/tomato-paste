@@ -364,8 +364,12 @@ FodyWeavers.xsd
 
 
 dist/***
-dongles/***
-!dongles/.keep
-extracted*
+/dongles/***
+!/dongles/.keep
+/extracted*
 desktop.ini
+
+/parakeet_model
+!/parakeet_model/.keep
+/*.txt
 
