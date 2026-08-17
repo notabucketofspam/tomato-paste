@@ -30,11 +30,15 @@ function initRecognizer() {
 // Keep the recognizer loaded in memory so we don't reload it for every file
 const recognizer = initRecognizer();
 
-export async function processAudio(filePath: string) {
+const transcripts = './transcripts';
+
+fs.mkdirSync(transcripts, { recursive: true });
+
+export function processAudio(filePath: string) {
   console.log(`Analyzing: ${filePath}`);
 
   let parsedPath = path.parse(filePath);
-  const txtpath = path.join(parsedPath.dir, `${parsedPath.name}.txt`);
+  const txtpath = path.join(transcripts, parsedPath.dir, `${parsedPath.name}.txt`);
     
   try {
     const waveData = readWave(filePath);        

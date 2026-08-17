@@ -372,4 +372,6 @@ desktop.ini
 /parakeet_model
 !/parakeet_model/.keep
 /*.txt
+/transcripts/***
+/final_final/***
 
