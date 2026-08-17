@@ -23,12 +23,11 @@ function findAudioFiles(dir: string): string[] {
 import {runFilediver} from './audio_extract.js';
 import {processAudio} from './whisperish.js';
 
-// 4. The main pipeline runner
 function runPipeline() {
   const extracted_audio = './extracted_audio';
 
   console.log(`Using filediver to extract audio to: ${extracted_audio}... this may take a while.`);
-  // await runFilediver(extracted_audio);
+  runFilediver(extracted_audio);
     
   const allAudioFiles = findAudioFiles(extracted_audio);
 
@@ -36,7 +35,7 @@ function runPipeline() {
 
   // Loop through each file one by one
   for (const file of allAudioFiles) {
-      // processAudio(file);
+       processAudio(file);
   }
 
   // loop through everything in the transcripts folder, and...
