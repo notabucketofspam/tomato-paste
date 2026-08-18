@@ -6,15 +6,16 @@ function findAudioFiles(dir: string): string[] {
   const filePaths: string[] = [];
 
   for (const entry of entries) {
-      const fullPath = path.join(dir, entry.name);
-        
+    const fullPath = path.join(dir, entry.name);        
     if (entry.isDirectory()) {
-      // If it's a folder, run this function again to dig inside it
+      // gotta loop
       const nestedFiles = findAudioFiles(fullPath);
       filePaths.push(...nestedFiles);
     } else if (entry.isFile() && (fullPath.endsWith('.wav') || fullPath.endsWith('.ogg'))) {
-      // If it's a file and ends in .wav or .ogg, add it to our list
+      // this one's a legit file
       filePaths.push(fullPath);
+    } else {
+      // skip it
     }
   }
   return filePaths;
@@ -24,12 +25,14 @@ import {runFilediver} from './audio_extract.js';
 import {processAudio} from './whisperish.js';
 import {hellcheck} from './speller.js';
 
-/**enable this to do the file extract*/
+/**enable this to do the file extract from Helldivers(TM) 2*/
 const RUN_FILEDIVER = false;
+
 /**the actual AI transcript thing */
 const RUN_TRANSCRIPTS = false;
 
 function runPipeline() {
+  /**thus is the folder where filediver.exe dumps his .wav files*/
   const extracted_audio = './extracted_audio';
 
   if (RUN_FILEDIVER){
@@ -39,7 +42,7 @@ function runPipeline() {
     
   const allAudioFiles = findAudioFiles(extracted_audio);
 
-  console.log(`Found ${allAudioFiles.length} audio files.`);
+  console.log(`how many audio files: ${allAudioFiles.length}`);
 
   // Loop through each file one by one
   if (RUN_TRANSCRIPTS) {
@@ -56,6 +59,7 @@ function runPipeline() {
 
   console.log(`renaming/copying files to the final_final folder...`);
 
+  /**this is the folder where all of the final (final) files go to rest*/
   const final_final = './final_final';
   fs.mkdirSync(final_final, { recursive: true });
 
@@ -79,9 +83,8 @@ function runPipeline() {
         //limit the length
         thosBeans = thosBeans.substring(0, 80);
         
-        let theSequeltoBeans = thosBeans;
-
         // this is how we get the final file name, without overwriting existing files
+        let theSequeltoBeans = thosBeans;
         let targetOutput =()=> path.join(final_final, theSequeltoBeans + path.extname(dudeWheresMyWavFile));
         let counter = 0;
         while (fs.existsSync(targetOutput())) {
@@ -99,6 +102,6 @@ function runPipeline() {
   }
 }
 
-
 // Execute the script
 runPipeline();
+

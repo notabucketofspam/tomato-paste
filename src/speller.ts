@@ -1,4 +1,4 @@
-const spellbound = new Map([
+const spellbomb = new Map([
   ['a comin', 'incoming'],
   ['a coming', 'incoming'],
   ['and coming', 'INCOMING'],
@@ -361,6 +361,7 @@ const spellbound = new Map([
 function escapeRegex(str: string): string {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
 /**thanks gemini*/
 function createTextCorrector(dictionary: Map<string, string>) {
   const sortedKeys = Array.from(dictionary.keys())
@@ -369,9 +370,8 @@ function createTextCorrector(dictionary: Map<string, string>) {
 
   const pattern = new RegExp(`\\b(${sortedKeys.join('|')})\\b`, 'gi');
 
-  // 3. Return a closure that does the single-pass replacement
   return (text: string): string => {
-    if (text.length===0) {
+    if (text.length === 0) {
       // fix for the one file that's glitched
       return 'Liberty Prosperity Democracy';
     } else {
@@ -383,7 +383,8 @@ function createTextCorrector(dictionary: Map<string, string>) {
   };
 }
 
+/**Spellbomb armed! Clear the area!*/
 export function hellcheck(){
-  return createTextCorrector(spellbound);
+  return createTextCorrector(spellbomb);
 }
 

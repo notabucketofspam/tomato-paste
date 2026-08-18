@@ -1,3 +1,11 @@
+# tomato-paste
+
+here's what tomato-paste does:
+- extracts most of the English voice clips from Helldivers 2
+- transcribes them (sometimes poorly)
+- renames each extracted voice clip to match its transcription
+
+---
 
 some stuff that you'll need to put into the `dongles` folder:
 - [filediver.exe](https://github.com/xypwn/filediver)
@@ -6,3 +14,7 @@ some stuff that you'll need to put into the `dongles` folder:
 and some stuff to put in the `parakeet_model` folder:
 - [the parakeet model](https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2)
 	- extract all of that, and then dump the contents into the `parakeet_model` folder
+
+---
+
+don't drink and drive.
