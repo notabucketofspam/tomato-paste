@@ -378,4 +378,5 @@ dist/***
 /transcripts*
 /final_final*
 
+# dont forget to lock your package
 package-lock.json
