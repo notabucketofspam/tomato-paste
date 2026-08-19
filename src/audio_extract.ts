@@ -1,7 +1,7 @@
 import child_process from 'node:child_process';
-
+import {filediverExePath} from './config_file.js';
 export function runFilediver(outputFolder: string) {
-  const toolPath = './dongles/filediver.exe';
+  const toolPath = filediverExePath;
   const args = [
     '--types','wwise_stream', 
     '--out', outputFolder, 

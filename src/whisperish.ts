@@ -2,10 +2,12 @@ import path from 'node:path';
 import fs from 'node:fs';
 import sherpa from 'sherpa-onnx-node';
 
+import {parakeetModelFolder, transcripts} from './config_file.js';
+
 const { OfflineRecognizer, readWave } = sherpa;
 
 function initRecognizer() {
-  const modelDir = path.join(import.meta.dirname,'..', 'parakeet_model');
+  const modelDir = path.normalize(parakeetModelFolder);
   const config = {
     featConfig: {
       sampleRate: 16000,
@@ -27,9 +29,6 @@ function initRecognizer() {
 const recognizer = initRecognizer();
 
 // ===================== the actual meat of the day ====================================
-
-/**this is the folder where mr. parakeet dumps his .txt files*/
-const transcripts = './transcripts';
 
 fs.mkdirSync(transcripts, { recursive: true });
 
