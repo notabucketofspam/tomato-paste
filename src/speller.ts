@@ -1,4 +1,5 @@
 import {spellbomb} from './big_dictionary.js';
+import {findAllFiles} from './finder.js';
 
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -32,7 +33,7 @@ function hellcheck(){
 
 import path from 'node:path';
 import fs from 'node:fs';
-import {transcripts, final_final} from './config_file.js';
+import {transcripts, final_final, extracted_audio} from './config_file.js';
 
 /**
  * loop through everything in the transcripts folder, and...
@@ -40,18 +41,27 @@ import {transcripts, final_final} from './config_file.js';
  * copy it into the final_final folder, and ...
  * rename it to be whatever is in the transcript
  */
-export function Spelldivers2(allAudioFiles: string[]){
+export function Spelldivers2(){
   const spelldiver = hellcheck();
+  
+  /** all of the txt transcripts*/
+  const teaFiles = findAllFiles(transcripts, '.txt');
 
-  const teaFiles = fs.readdirSync(transcripts, { withFileTypes: true });
-  for (const file of teaFiles){
-    if (file.isFile() && file.name.endsWith('.txt')) {
-      const maybeName = path.parse(file.name).name;
-      const dudeWheresMyWavFile = allAudioFiles.find(f => path.parse(f).name === maybeName);
-      if (dudeWheresMyWavFile) {
-        // we actually have a wave file
+  /** all of the extracted wav files*/
+  const extractedAudioFiles = fs.readdirSync(extracted_audio, { withFileTypes: true,recursive:true });
 
-        let thosBeans = fs.readFileSync(path.join(transcripts, file.name), 'utf-8');
+  for (const waveFile of extractedAudioFiles){
+    const normalWaveSrcPath = path.join(waveFile.parentPath, waveFile.name);
+    if (waveFile.isFile() && waveFile.name.endsWith('.wav')) {
+      /**the actual name of the file (it's just a bunch of numbers)*/
+      const maybeName = path.parse(waveFile.name).name;
+
+      const textFile = teaFiles.find(f => path.parse(f).name === maybeName);
+      if (textFile) {
+        // we actually have a text file to go with this wave file
+        
+        // read the transcript
+        let thosBeans = fs.readFileSync(textFile, 'utf-8');
 
         //clean up the transcript
         thosBeans = thosBeans.replace(/[^\w\s]|\r|\n/gm, "").trim();
@@ -64,19 +74,20 @@ export function Spelldivers2(allAudioFiles: string[]){
         
         // this is how we get the final file name, without overwriting existing files
         let theSequeltoBeans = thosBeans;
-        let targetOutput =()=> path.join(final_final, theSequeltoBeans + path.extname(dudeWheresMyWavFile));
+        let targetOutput =()=> path.join(final_final, theSequeltoBeans + path.extname(waveFile.name));
         let counter = 0;
         while (fs.existsSync(targetOutput())) {
           counter++;
           theSequeltoBeans = `${thosBeans} (${counter})`;
         }
 
-        fs.copyFileSync(dudeWheresMyWavFile, targetOutput());
+        fs.copyFileSync(normalWaveSrcPath, targetOutput());
       } else {
-        // no wave file?
+        // no text file? just copy the wave file over with its original name
+        fs.copyFileSync(normalWaveSrcPath, path.join(final_final, waveFile.name));
       }
     } else {
-      /* YOU GET NOTHING! YOU LOSE! GOOD DAY SIR!*/
+      // this is not a wave file
     }
   }
 }

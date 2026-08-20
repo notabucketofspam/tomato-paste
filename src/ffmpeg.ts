@@ -1,6 +1,7 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import path from 'node:path';
+import fs from 'node:fs';
 
 import {opodes_out, ffmpegExePath} from './config_file.js';
 
@@ -13,17 +14,18 @@ async function convertAndNormalize(inputPath: string) {
   const outputPath = path.join(opodes_out, `${parsedPath.name}.opus`);
   
   try {
-        
-    await execFileAsync(ffmpegExePath, [
-      '-i', inputPath,
-      '-ac', '2',
-      '-af', 'loudnorm=I=-14:TP=-1.0:LRA=11',
-      '-c:a', 'libopus',
-      '-b:a', '128k',
-      outputPath,
-      '-y'
-    ]);        
-
+    if (!fs.existsSync(outputPath)){
+      // only run ffmpeg if the intended output doesnt exist yet
+      await execFileAsync(ffmpegExePath, [
+        '-i', inputPath,
+        '-ac', '2',
+        '-af', 'loudnorm=I=-14:TP=-1.0:LRA=11',
+        '-c:a', 'libopus',
+        '-b:a', '128k',
+        outputPath,
+        '-y'
+      ]);
+    }
   } catch (error) {
     console.error(`FFmpeg failed on ${inputPath}:`, error);
   }

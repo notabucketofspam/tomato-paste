@@ -68,7 +68,7 @@ export async function syncBucket(localDir:string){
     await s3.send(new PutObjectCommand({
       Bucket: bucket,
       Key: s3Key,
-      Body: fs.createReadStream(fullPath),
+      Body: fs.readFileSync(fullPath),
       ContentType: fullPath.endsWith('.opus') ? 'audio/ogg; codecs=opus' : undefined,
     }));
 
