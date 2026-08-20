@@ -7,6 +7,7 @@ import {Spelldivers2} from './speller.js';
 import {runFFmpeg} from './ffmpeg.js';
 import {syncBucket} from './object_storage.js';
 import {findAudioFiles} from './finder.js';
+import {writeOutJson} from './json_man.js';
 
 import {
   extracted_audio,
@@ -84,6 +85,10 @@ async function runPipeline() {
         fs.unlinkSync(orphan);
       }
     }
+
+    // and now we have to make a new json file
+    console.log('writing out new ListObjects.json...');
+    writeOutJson();
   }
 
   // do the syncing

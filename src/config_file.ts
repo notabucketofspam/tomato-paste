@@ -23,3 +23,5 @@ export const final_final = './final_final';
 /**we get some opodes from ffmpeg and we put them in here*/
 export const opodes_out = './opodes_out';
 
+/**a folder where ListObjects.json goes */
+export const json_out = './json_out';

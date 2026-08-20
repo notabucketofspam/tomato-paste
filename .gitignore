@@ -381,6 +381,7 @@ dist/***
 /transcripts*
 /final_final*
 /opodes_out*
+/json_out*
 
 # dont forget to lock your package
 package-lock.json
