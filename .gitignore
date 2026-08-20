@@ -364,6 +364,8 @@ FodyWeavers.xsd
 
 # it's him again.
 desktop.ini
+
+# tsc build output
 dist/***
 
 # the DLC that you gotta grab
@@ -377,6 +379,7 @@ dist/***
 /*.txt
 /transcripts*
 /final_final*
+/opodes_out*
 
 # dont forget to lock your package
 package-lock.json

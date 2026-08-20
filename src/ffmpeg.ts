@@ -16,6 +16,7 @@ async function convertAndNormalize(inputPath: string) {
         
     await execFileAsync(ffmpegExePath, [
       '-i', inputPath,
+      '-ac', '2',
       '-af', 'loudnorm=I=-14:TP=-1.0:LRA=11',
       '-c:a', 'libopus',
       '-b:a', '128k',

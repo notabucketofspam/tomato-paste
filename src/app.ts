@@ -24,8 +24,14 @@ function findAudioFiles(dir: string): string[] {
 import {runFilediver} from './audio_extract.js';
 import {processAudio} from './whisperish.js';
 import {Spelldivers2} from './speller.js';
+import {runFFmpeg} from './ffmpeg.js';
 
-import {extracted_audio, final_final} from './config_file.js';
+import {
+  extracted_audio,
+  transcripts,
+  final_final,
+  opodes_out
+} from './config_file.js';
 
 /**enable this to do the file extract from Helldivers(TM) 2*/
 const RUN_FILEDIVER = false;
@@ -36,10 +42,16 @@ const RUN_TRANSCRIPTS = false;
 /**check his spelling*/
 const RUN_SPELLCHECKING = true;
 
-function runPipeline() {
+/**convert the .wav files to .opus files*/
+const RUN_FFMPEG = true;
+
+async function runPipeline() {
 
   if (RUN_FILEDIVER){
     console.log(`Using filediver to extract audio to: ${extracted_audio}... this may take a while.`);
+    // filediver will overwrite old files automatically,
+    // so we just gotta make sure that the folder exists
+    fs.mkdirSync(extracted_audio, { recursive: true });
     runFilediver(extracted_audio);
   }
     
@@ -50,6 +62,7 @@ function runPipeline() {
   // Loop through each file one by one
   if (RUN_TRANSCRIPTS) {
     console.log('Starting AI transcription...  this will also take a while lol');
+    fs.mkdirSync(transcripts, { recursive: true });
     for (const file of allAudioFiles) {
       processAudio(file);
     }
@@ -63,6 +76,18 @@ function runPipeline() {
     fs.mkdirSync(final_final, { recursive: true });
     // actually check the spells
     Spelldivers2(allAudioFiles);
+  }
+
+  const allFinalFinals = findAudioFiles(final_final);
+
+  // convert it to opodes
+  if (RUN_FFMPEG) {
+    console.log('converting to opodes');
+    // remove old opodes
+    fs.rmSync(opodes_out, { recursive: true, force: true });
+    fs.mkdirSync(opodes_out, { recursive: true });
+    // do the conversion
+    await runFFmpeg(allFinalFinals);
   }
 }
 
