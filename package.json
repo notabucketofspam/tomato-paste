@@ -15,6 +15,10 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "@auth0/s3": "^1.0.1",
     "sherpa-onnx-node": "^1.13.5"
+  },
+  "allowScripts": {
+    "aws-sdk@2.1693.0": true
   }
 }
