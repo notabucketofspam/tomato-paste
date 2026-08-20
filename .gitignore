@@ -364,6 +364,7 @@ FodyWeavers.xsd
 
 # it's him again.
 desktop.ini
+/notkeys*
 
 # tsc build output
 dist/***

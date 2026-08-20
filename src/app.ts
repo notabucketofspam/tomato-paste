@@ -25,6 +25,7 @@ import {runFilediver} from './audio_extract.js';
 import {processAudio} from './whisperish.js';
 import {Spelldivers2} from './speller.js';
 import {runFFmpeg} from './ffmpeg.js';
+import {syncBucket} from './object_storage.js';
 
 import {
   extracted_audio,
@@ -40,10 +41,13 @@ const RUN_FILEDIVER = false;
 const RUN_TRANSCRIPTS = false;
 
 /**check his spelling*/
-const RUN_SPELLCHECKING = true;
+const RUN_SPELLCHECKING = false;
 
 /**convert the .wav files to .opus files*/
-const RUN_FFMPEG = true;
+const RUN_FFMPEG = false;
+
+/**sync to bucket*/
+const RUN_OSYNC = true;
 
 async function runPipeline() {
 
@@ -88,6 +92,12 @@ async function runPipeline() {
     fs.mkdirSync(opodes_out, { recursive: true });
     // do the conversion
     await runFFmpeg(allFinalFinals);
+  }
+
+  // do the syncing
+  if (RUN_OSYNC){
+    console.log('syncing to bucket...');
+    await syncBucket(opodes_out);
   }
 }
 

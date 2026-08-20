@@ -29,7 +29,7 @@ async function convertAndNormalize(inputPath: string) {
   }
 }
 
-async function mapConcurrent<T>(
+export async function mapConcurrent<T>(
   items: T[],
   concurrency: number,
   fn: (item: T) => Promise<void>
