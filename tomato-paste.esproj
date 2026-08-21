@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.6165494" >
   <PropertyGroup>
     <ShouldRunNpmAudit>false</ShouldRunNpmAudit>
+    <BuildCommand>build</BuildCommand>
   </PropertyGroup>
 </Project>
