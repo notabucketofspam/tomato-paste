@@ -45,7 +45,7 @@ async function runPipeline() {
   }
   
   // spelling
-  if (RUN_SPELLCHECKING) {    
+  if (RUN_SPELLCHECKING) {
     console.log(`renaming/copying files to the ${final_final} folder...`);
     // get rid of the old folder, because it'll create naming conflicts otherwise
     fs.rmSync(final_final, { recursive: true, force: true });
@@ -54,31 +54,39 @@ async function runPipeline() {
     Spelldivers2();
   }
 
-  const allFinalFinals = findAllFiles(final_final, '.wav');
-
   // convert it to opodes
   if (RUN_FFMPEG) {
-    console.log('converting to opodes');
-    // remove old opodes
-    fs.mkdirSync(opodes_out, { recursive: true });
-    // do the conversion
-    await runFFmpeg(allFinalFinals);
+    let sameTotals = false;
+    do {
+      const allFinalFinals = findAllFiles(final_final, '.wav');
+      console.log(`${final_final}: ${allFinalFinals.length} .wav files. converting to opodes...`);
+      fs.mkdirSync(opodes_out, { recursive: true });
+      // do the conversion
+      await runFFmpeg(allFinalFinals);
 
-    // delete orphans in opodes_out
-    const allOpodesOut = findAllFiles(opodes_out, '.opus');
-    const finalFinalSet = new Set(allFinalFinals.map(f => path.parse(f).name));
-    const orphans = allOpodesOut.filter(f => !finalFinalSet.has(path.parse(f).name));
-    if (orphans.length > 0) {
-      // gotta delete orphans
-      console.log(`Deleting ${orphans.length} orphaned opodes...`);
-      for (const orphan of orphans) {
-        fs.unlinkSync(orphan);
+      // delete orphans in opodes_out
+      const allOpodesOut = findAllFiles(opodes_out, '.opus');
+      const finalFinalSet = new Set(allFinalFinals.map(f => path.parse(f).name));
+      const orphans = allOpodesOut.filter(f => !finalFinalSet.has(path.parse(f).name));
+      if (orphans.length > 0) {
+        // gotta delete orphans
+        console.log(`Deleting ${orphans.length} orphaned opodes...`);
+        for (const orphan of orphans) {
+          fs.unlinkSync(orphan);
+        }
       }
-    }
 
-    // and now we have to make a new json file
-    console.log('writing out new ListObjects.json...');
-    writeOutJson();
+      // and now we have to make a new json file
+      console.log('writing out new ListObjects.json...');
+      writeOutJson();
+
+      // make sure that they all have the right number of files
+      // No diver left behind.
+      const extractedWaves = findAllFiles(extracted_audio, '.wav');
+      const finalizedWaves = findAllFiles(final_final, '.wav');
+      const normalOpodes = findAllFiles(opodes_out, '.opus');
+      sameTotals = (extractedWaves.length === finalizedWaves.length) && (finalizedWaves.length === normalOpodes.length);
+    } while (!sameTotals);
   }
 
   // do the syncing

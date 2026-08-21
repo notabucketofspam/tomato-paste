@@ -395,6 +395,8 @@ export const spellbomb = new Map([
   ['mig', 'my leg'],
   ['mooc momf mouf', 'move move move'],
   ['bac', 'BACK'],
+  ['tirent', 'TYRANTS'],
+  ['fram', 'Freedom'],
 
 ]);
 
