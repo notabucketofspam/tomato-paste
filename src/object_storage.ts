@@ -3,9 +3,7 @@ import path from 'node:path';
 
 import { S3Client, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
-function astext(x:string){
-	return fs.readFileSync(path.normalize(x),{encoding:'utf8'});
-}
+import {astext} from './finder.js';
 import {mapConcurrent } from './ffmpeg.js';
 
 const s3 = new S3Client({

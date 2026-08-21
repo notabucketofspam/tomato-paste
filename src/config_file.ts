@@ -25,3 +25,21 @@ export const opodes_out = './opodes_out';
 
 /**a folder where ListObjects.json goes */
 export const json_out = './json_out';
+
+// =================== enable specific parts of the pipeline =========================
+
+/**enable this to do the file extract from Helldivers(TM) 2*/
+export const RUN_FILEDIVER = false;
+
+/**the actual AI transcript thing */
+export const RUN_TRANSCRIPTS = false;
+
+/**check his spelling*/
+export const RUN_SPELLCHECKING = true;
+
+/**convert the .wav files to .opus files*/
+export const RUN_FFMPEG = true;
+
+/**sync to bucket*/
+export const RUN_OSYNC = true;
+

@@ -6,30 +6,20 @@ import {processAudio} from './whisperish.js';
 import {Spelldivers2} from './speller.js';
 import {runFFmpeg} from './ffmpeg.js';
 import {syncBucket} from './object_storage.js';
-import {findAudioFiles} from './finder.js';
+import {findAllFiles, astext} from './finder.js';
 import {writeOutJson} from './json_man.js';
 
 import {
   extracted_audio,
   transcripts,
   final_final,
-  opodes_out
+  opodes_out,
+  RUN_FILEDIVER,
+  RUN_TRANSCRIPTS,
+  RUN_SPELLCHECKING,
+  RUN_FFMPEG,
+  RUN_OSYNC,
 } from './config_file.js';
-
-/**enable this to do the file extract from Helldivers(TM) 2*/
-const RUN_FILEDIVER = false;
-
-/**the actual AI transcript thing */
-const RUN_TRANSCRIPTS = false;
-
-/**check his spelling*/
-const RUN_SPELLCHECKING = true;
-
-/**convert the .wav files to .opus files*/
-const RUN_FFMPEG = true;
-
-/**sync to bucket*/
-const RUN_OSYNC = true;
 
 async function runPipeline() {
 
@@ -41,7 +31,7 @@ async function runPipeline() {
     runFilediver(extracted_audio);
   }
     
-  const allAudioFiles = findAudioFiles(extracted_audio);
+  const allAudioFiles = findAllFiles(extracted_audio, '.wav');
 
   console.log(`how many audio files: ${allAudioFiles.length}`);
 
@@ -56,7 +46,7 @@ async function runPipeline() {
   
   // spelling
   if (RUN_SPELLCHECKING) {    
-    console.log(`renaming/copying files to the final_final folder...`);
+    console.log(`renaming/copying files to the ${final_final} folder...`);
     // get rid of the old folder, because it'll create naming conflicts otherwise
     fs.rmSync(final_final, { recursive: true, force: true });
     fs.mkdirSync(final_final, { recursive: true });
@@ -64,7 +54,7 @@ async function runPipeline() {
     Spelldivers2();
   }
 
-  const allFinalFinals = findAudioFiles(final_final);
+  const allFinalFinals = findAllFiles(final_final, '.wav');
 
   // convert it to opodes
   if (RUN_FFMPEG) {
@@ -75,7 +65,7 @@ async function runPipeline() {
     await runFFmpeg(allFinalFinals);
 
     // delete orphans in opodes_out
-    const allOpodesOut = findAudioFiles(opodes_out);
+    const allOpodesOut = findAllFiles(opodes_out, '.opus');
     const finalFinalSet = new Set(allFinalFinals.map(f => path.parse(f).name));
     const orphans = allOpodesOut.filter(f => !finalFinalSet.has(path.parse(f).name));
     if (orphans.length > 0) {
