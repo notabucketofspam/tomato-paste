@@ -1,4 +1,4 @@
-import {findAllFiles} from "./finder.js";
+import {findAllFiles, astext} from "./finder.js";
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -14,5 +14,10 @@ export function writeOutJson(){
 	const jsonPath = path.join(json_out, 'ListObjects.json');
 	fs.mkdirSync(json_out, { recursive: true });
 	fs.writeFileSync(jsonPath, JSON.stringify(fnames));
+
+	// copy the json to his new home
+	const clockbot_target_dir = path.normalize(astext('./notkeys/clockbot_target_dir'));
+	fs.mkdirSync(clockbot_target_dir, { recursive: true });
+	fs.copyFileSync(jsonPath, path.join(clockbot_target_dir, 'ListObjects.json'));
 }
 
