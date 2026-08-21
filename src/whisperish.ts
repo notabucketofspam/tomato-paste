@@ -1,8 +1,9 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import sherpa from 'sherpa-onnx-node';
+import {OfflineRecognizer as OfflineRecognizerClass} from 'sherpa-onnx-node';
 
-import {parakeetModelFolder, transcripts} from './config_file.js';
+import {parakeetModelFolder, transcripts, RUN_TRANSCRIPTS} from './config_file.js';
 
 const { OfflineRecognizer, readWave } = sherpa;
 
@@ -26,7 +27,11 @@ function initRecognizer() {
   };
   return new OfflineRecognizer(config);
 }
-const recognizer = initRecognizer();
+let recognizer: OfflineRecognizerClass | null = null;
+
+if (RUN_TRANSCRIPTS){
+  recognizer = initRecognizer();
+}
 
 // ===================== the actual meat of the day ====================================
 
@@ -39,7 +44,7 @@ export function processAudio(filePath: string) {
   let parsedPath = path.parse(filePath);
   const txtpath = path.join(transcripts, `${parsedPath.name}.txt`);
     
-  try {
+  if (recognizer) try {
     const waveData = readWave(filePath);        
     const stream = recognizer.createStream();
 
