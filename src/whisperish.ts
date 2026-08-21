@@ -1,7 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import sherpa from 'sherpa-onnx-node';
-import {OfflineRecognizer as OfflineRecognizerClass} from 'sherpa-onnx-node';
 
 import {parakeetModelFolder, transcripts, RUN_TRANSCRIPTS} from './config_file.js';
 
@@ -27,11 +26,8 @@ function initRecognizer() {
   };
   return new OfflineRecognizer(config);
 }
-let recognizer: OfflineRecognizerClass | null = null;
 
-if (RUN_TRANSCRIPTS){
-  recognizer = initRecognizer();
-}
+const recognizer = RUN_TRANSCRIPTS ? initRecognizer() : null;
 
 // ===================== the actual meat of the day ====================================
 
